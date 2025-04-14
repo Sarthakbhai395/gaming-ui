@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reaction Speed Game</title>
+  <style>
+    body { background: #1a1a1a; color: #fff; font-family: Arial; text-align: center; padding: 20px; }
+    #target { width: 100px; height: 100px; background: #ff4d4d; margin: 20px auto; display: none; cursor: pointer; }
+    #score { font-size: 1.2rem; margin: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Reaction Speed Game</h1>
+  <p>Click the red box as fast as you can when it appears!</p>
+  <div id="score">Score: 0ms</div>
+  <div id="target"></div>
+
+  <script>
+    const target = document.getElementById('target');
+    const scoreDisplay = document.getElementById('score');
+    let score = Infinity;
+
+    function showTarget() {
+      const randomTime = Math.random() * 2000 + 1000;
+      setTimeout(() => {
+        const start = performance.now();
+        target.style.display = 'block';
+        target.onclick = () => {
+          const end = performance.now();
+          const reactionTime = Math.round(end - start);
+          score = Math.min(score, reactionTime);
+          scoreDisplay.textContent = `Score: ${score}ms`;
+          target.style.display = 'none';
+          showTarget();
+        };
+      }, randomTime);
+    }
+
+    target.addEventListener('click', (e) => {
+      if (e.target.style.display === 'block') {
+        const end = performance.now();
+        const reactionTime = Math.round(end - performance.now());
+        score = Math.min(score, reactionTime);
+        scoreDisplay.textContent = `Score: ${score}ms`;
+        target.style.display = 'none';
+        showTarget();
+      }
+    });
+
+    showTarget();
+  </script>
+</body>
+</html>

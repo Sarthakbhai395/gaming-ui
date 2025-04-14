@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Tiles Game</title>
+  <style>
+    body { background: #1a1a1a; color: #fff; font-family: Arial; text-align: center; padding: 20px; }
+    #game-area { display: grid; grid-template-columns: repeat(4, 70px); gap: 10px; margin: 20px auto; max-width: 300px; }
+    .tile { width: 70px; height: 70px; background: #2d2d2d; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.5rem; }
+    .matched { background: #4dff4d; }
+  </style>
+</head>
+<body>
+  <h1>Memory Tiles Game</h1>
+  <p>Flip tiles and match pairs to win!</p>
+  <div id="game-area"></div>
+
+  <script>
+    const gameArea = document.getElementById('game-area');
+    let tiles = [];
+    let flippedTiles = [];
+    let matchedPairs = 0;
+
+    function createTiles() {
+      const colors = ['red', 'blue', 'green', 'yellow', 'red', 'blue', 'green', 'yellow'];
+      colors.sort(() => Math.random() - 0.5);
+      colors.forEach(color => {
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+        tile.dataset.color = color;
+        tile.addEventListener('click', flipTile);
+        gameArea.appendChild(tile);
+        tiles.push(tile);
+      });
+    }
+
+    function flipTile() {
+      if (flippedTiles.length < 2 && !this.classList.contains('matched')) {
+        this.style.backgroundColor = this.dataset.color;
+        flippedTiles.push(this);
+
+        if (flippedTiles.length === 2) {
+          setTimeout(checkMatch, 1000);
+        }
+      }
+    }
+
+    function checkMatch() {
+      if (flippedTiles[0].dataset.color === flippedTiles[1].dataset.color) {
+        flippedTiles.forEach(tile => tile.classList.add('matched'));
+        matchedPairs++;
+        if (matchedPairs === 4) alert('You Win!');
+      } else {
+        flippedTiles.forEach(tile => tile.style.backgroundColor = '#2d2d2d');
+      }
+      flippedTiles = [];
+    }
+
+    createTiles();
+  </script>
+</body>
+</html>
